@@ -81,7 +81,7 @@ case $1 in
         fi
         
         bm remove "$2"
-        bm add "$2" "$3"
+        bm add "$2" "$path"
         return 0
         ;;
     list | ls)
