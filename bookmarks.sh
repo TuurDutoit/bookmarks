@@ -16,6 +16,7 @@ bm remove <name>               Remove a bookmark
 bm list                        List all bookmarks
    ls
 bm echo <name>                 Print the path of a bookmark
+bm go <name>                   Change current directory (cd) to a bookmark's path
 bm update                      Source the bookmark file
 bm help                        Print this usage info'
 
@@ -95,6 +96,18 @@ case $1 in
             local line=$(grep "^$2=" "$bookmark_file")
             if [[ $line ]]; then
                 echo $line | cut -c"$(($(echo $2 | wc -c) + 2))"-"$(($(echo $line | wc -c) - 2))"
+                return 0
+            else
+                echo "bm: $2: No such bookmark."
+                return 1
+            fi
+        fi
+        ;;
+    go)
+        if [[ $# -eq 2 ]]; then
+            local line=$(grep "^$2=" "$bookmark_file")
+            if [[ $line ]]; then
+                cd $(echo $line | cut -c"$(($(echo $2 | wc -c) + 2))"-"$(($(echo $line | wc -c) - 2))")
                 return 0
             else
                 echo "bm: $2: No such bookmark."
