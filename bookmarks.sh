@@ -17,6 +17,7 @@ bm list                        List all bookmarks
    ls
 bm echo <name>                 Print the path of a bookmark
 bm go <name>                   Change current directory (cd) to a bookmarked path
+   cd <name>
 bm update                      Source the bookmark file
 bm help                        Print this usage info'
 
@@ -103,7 +104,7 @@ case $1 in
             fi
         fi
         ;;
-    go)
+    go | cd)
         if [[ $# -eq 2 ]]; then
             local line=$(grep "^$2=" "$bookmark_file")
             if [[ $line ]]; then
