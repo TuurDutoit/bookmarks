@@ -9,14 +9,15 @@ source "$bookmark_file"
 
 bm() {
 usage='Usage:
-bm add <name> <path>           Create a bookmark for path.
-bm add <name>                  Create a bookmark for the current directory.
-bm edit <name> <new path>      Edit a bookmark to point to a new path.
-bm edit <name>                 Edit a bookmark to point to the current directory.
-bm update                      Source the bookmark file.
-bm remove <name>               Remove a bookmark.
-bm list                        List all bookmarks.
-bm ls                          Alias for list.'              
+bm add <name> [path]           Create a bookmark pointing to path (current directory by default)
+bm edit <name> [new path]      Edit a bookmark to point to a new path (current directory by default)
+bm remove <name>               Remove a bookmark
+   rm <name>
+bm list                        List all bookmarks
+   ls
+bm echo <name>                 Print the path of a bookmark
+bm update                      Source the bookmark file
+bm help                        Print this usage info'
 
 case $1 in
     add)
@@ -36,7 +37,7 @@ case $1 in
         fi
 
         if declare | grep "^${2}=" > /dev/null; then
-            echo "bm: The name $2 is in use."
+            echo "bm: $2: This name is already in use."
             return 1
         fi
         if hash greadlink 2>/dev/null; then
@@ -47,22 +48,6 @@ case $1 in
         echo ${2}=\""$path"\" >> "$bookmark_file"
         eval ${2}=\""$path"\"
         return 0
-        ;;
-    update)
-        if [[ $# -eq 1 ]]; then
-            source "$bookmark_file"
-            return 0
-        fi
-        ;;
-    remove)
-        if [[ $# -eq 2 ]]; then
-            unset $2
-            local contents=$(grep -v "^${2}=" "$bookmark_file")
-            echo "$contents" > "${bookmark_file}.tmp"
-            rm -f "$bookmark_file"
-            mv "${bookmark_file}.tmp" "$bookmark_file"
-            return 0
-        fi
         ;;
     edit)
         local path
@@ -84,9 +69,50 @@ case $1 in
         bm add "$2" "$path"
         return 0
         ;;
+    remove | rm)
+        if [[ $# -eq 2 ]]; then
+            unset $2
+            if [[ $(grep "^${2}=" "$bookmark_file") ]]; then
+                local contents=$(grep -v "^${2}=" "$bookmark_file")
+                echo "$contents" > "${bookmark_file}.tmp"
+                rm -f "$bookmark_file"
+                mv "${bookmark_file}.tmp" "$bookmark_file"
+                return 0
+            else
+                echo "bm: ${2}: No such bookmark."
+                return 1
+            fi
+        fi
+        ;;
     list | ls)
-        cat "$bookmark_file"
-        return 0
+        if [[ $# -eq 1 ]]; then
+            cat "$bookmark_file"
+            return 0
+        fi
+        ;;
+    echo)
+        if [[ $# -eq 2 ]]; then
+            local line=$(grep "^$2=" "$bookmark_file")
+            if [[ $line ]]; then
+                echo $line | cut -c"$(($(echo $2 | wc -c) + 2))"-"$(($(echo $line | wc -c) - 2))"
+                return 0
+            else
+                echo "bm: $2: No such bookmark."
+                return 1
+            fi
+        fi
+        ;;
+    update)
+        if [[ $# -eq 1 ]]; then
+            source "$bookmark_file"
+            return 0
+        fi
+        ;;
+    help)
+        if [[ $# -eq 1 ]]; then
+            echo "$usage"
+            return 1
+        fi
         ;;
 esac
 
