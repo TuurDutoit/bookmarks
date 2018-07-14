@@ -16,7 +16,7 @@ bm remove <name>               Remove a bookmark
 bm list                        List all bookmarks
    ls
 bm echo <name>                 Print the path of a bookmark
-bm go <name>                   Change current directory (cd) to a bookmark's path
+bm go <name>                   Change current directory (cd) to a bookmarked path
 bm update                      Source the bookmark file
 bm help                        Print this usage info'
 
