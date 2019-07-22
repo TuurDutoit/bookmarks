@@ -5,8 +5,9 @@ A simple bookmarks manager for Bash.
 
 ## Installation
 0. If you're on Mac, install `greadlink` from [Homebrew](http://brew.sh), i.e. `brew install greadlink`.
-1. Copy the `bookmarks.sh` file to wherever you like (e.g. `~/.bookmarks.sh`), just don't put it in `~/.bookmarks`; that's where the bookmarks will be stored. You can also copy the contents to your `~/.bash_profile` or `~/.bashrc`; in this case, skip the next step.
+1. Clone this repo or copy the `bookmarks.sh` file to wherever you like (e.g. `~/.bookmarks.sh`), just don't put it in `~/.bookmarks`; that's where the bookmarks will be stored. You can also copy the contents to your `~/.bash_profile` or `~/.bashrc`; in this case, skip the next step.
 2. Reference the file from `~/.bash_profile` by adding the following line: `source /path/to/bookmarks.sh` (replacing `/path/to/bookmarks.sh` by the actual path, of course).
+3. Create the empty file `~/.bookmarks`.
 3. The `bm` command will now be available from any new terminal you open. If you want to use it in a terminal that was already open before installing bm, use the `source` command as follows: `source ~/.bash_profile` or `source /path/to/bookmarks.sh` to just load bm, instead of the whole `.bash_profile`.
 
 ## Usage
